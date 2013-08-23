@@ -8,7 +8,7 @@ http://lucb1e.com/rp/cookielesscookies
 License
 -------
 
-Copyright © 2013 lucb1e <github at lucb1e.com>
+Copyright © 2013 lucb1e.
 
 This work is free. You can redistribute it and/or modify it under the
 terms of the Do What The Fuck You Want To Public License, Version 2,
