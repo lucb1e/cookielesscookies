@@ -203,7 +203,7 @@
 			
 			<div style="margin-top: 20px; color: #888; font-size: 0.9em;">
 				Written by lucb1e in 2013.<br/>
-				All text, resources and methods on this page are hereby released as WTFPL - www.wtfpl.net
+				All text, resources and methods on this page are hereby released as WTFPL - <a rel='license' href='http://www.wtfpl.net'>www.wtfpl.net</a>
 			</div>
 		</div>
 		<div style="height: 500px;">&nbsp;</div> <!-- I often scroll past the end of the document, it's nicer to read I think -->
