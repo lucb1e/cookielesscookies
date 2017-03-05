@@ -1,0 +1,34 @@
+body {
+    font-family: Arial, serif;
+}
+
+#contents, #new_string {
+    width: 632px;
+}
+
+#contents {
+    font-size: 1em;
+    margin: 40px auto 0;
+}
+
+#tracker {
+    float: right;
+    margin-left: 15px;
+}
+
+span, #licence {
+    font-size: 0.9em;
+}
+
+span {
+    color: #666;
+}
+
+#licence {
+    margin-top: 20px;
+    color: #888;
+}
+
+#footer {
+    height: 500px;
+}
