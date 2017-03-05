@@ -15,59 +15,42 @@ if (!empty($_SERVER["HTTP_IF_NONE_MATCH"])) {
     $etag = substr(sha1($secret . sha1($_SERVER["REMOTE_ADDR"]) . sha1($_SERVER["HTTP_USER_AGENT"])), 0, 18);
 }
 
-// Initialize a new or existing session given any etag.
-function init_session($etag, $force_reinit = false)
-{
-    global $session, $sessions_dir;
-    if (!$force_reinit && file_exists($sessions_dir . DIRECTORY_SEPARATOR . $etag)) {
-        $session = unserialize(file_get_contents($sessions_dir . DIRECTORY_SEPARATOR . $etag));
-    } else {
-        $session = array("visits" => 1, "last_visit" => time(), "your_string" => "");
-    }
-}
-
-function update_session()
-{
-    global $session;
-    $session["visits"] += 1;
-    $session["last_visit"] = time();
-}
-
-// Write any changes to the disk
-function store_session($etag)
-{
-    global $session, $sessions_dir;
-    $fid = fopen($sessions_dir . DIRECTORY_SEPARATOR . $etag, "w");
-    fwrite($fid, serialize($session));
-    fclose($fid);
-}
-
-init_session($etag);
-
 // .htaccess rewrites to ?tracker if the 'tracker.jpg' file is requested.
-if (isset($_GET["tracker"])) {
-    // No ETag sent? Make sure we use a new session.
-    if (empty($_SERVER["HTTP_IF_NONE_MATCH"])) {
-        @unlink($sessions_dir . DIRECTORY_SEPARATOR . $etag); // may or may not exist
-        unset($session);
-        init_session($etag);
-    }
-    update_session();
-    store_session($etag);
-    header("Cache-Control: private, must-revalidate, proxy-revalidate");
-    header("ETag: " . substr($etag, 0, 18)); // our "cookie"
-    header("Content-type: image/jpeg");
-    header("Content-length: " . filesize("fingerprinting.jpg"));
-    readfile("fingerprinting.jpg");
-    exit;
+// No ETag sent? Make sure we use a new session.
+if (isset($_GET["tracker"]) && empty($_SERVER["HTTP_IF_NONE_MATCH"])) {
+    @unlink($sessions_dir . DIRECTORY_SEPARATOR . $etag); // may or may not exist
 }
 
-// Vulnerable to CSRF attacks, I know. I didn't think it really mattered
-// since XSS is impossible and no important data is stored.
-if (isset($_POST["new_string"])) {
-    $session["your_string"] = substr(htmlentities($_POST["new_string"]), 0, 500);
-    store_session($etag);
-    header("Location: .");
+// Initialize a new or existing session given any etag.
+if (file_exists($sessions_dir . DIRECTORY_SEPARATOR . $etag)) {
+    $session = unserialize(file_get_contents($sessions_dir . DIRECTORY_SEPARATOR . $etag));
+
+    // .htaccess rewrites to ?tracker if the 'tracker.jpg' file is requested.
+    if (isset($_GET["tracker"])) {
+        $session["visits"] += 1;
+        $session["last_visit"] = time();
+    }
+} else {
+    $session = array("visits" => 1, "last_visit" => time(), "your_string" => "");
+}
+
+if (isset($_GET["tracker"]) || isset($_POST["new_string"])) {
+    if (isset($_GET["tracker"])) { // .htaccess rewrites to ?tracker if the 'tracker.jpg' file is requested.
+        header("Cache-Control: private, must-revalidate, proxy-revalidate");
+        header("ETag: " . $etag); // our "cookie"
+        header("Content-type: image/jpeg");
+        header("Content-length: " . filesize("fingerprinting.jpg"));
+        readfile("fingerprinting.jpg");
+    } else {
+        // Vulnerable to CSRF attacks, I know. I didn't think it really mattered
+        // since XSS is impossible and no important data is stored.
+        header("Location: .");
+        $session["your_string"] = substr(htmlentities($_POST["new_string"]), 0, 500);
+    }
+
+    // Write any changes to the disk
+    file_put_contents($sessions_dir . DIRECTORY_SEPARATOR . $etag, serialize($session));
+
     exit;
 }
 ?>
