@@ -2,8 +2,11 @@ body {
     font-family: Arial, serif;
 }
 
-#contents {
+#contents, #new_string {
     width: 632px;
+}
+
+#contents {
     font-size: 1em;
     margin: 40px auto 0;
 }
@@ -13,19 +16,17 @@ body {
     margin-left: 15px;
 }
 
-#new_string {
-    width: 632px;
+span, #licence {
+    font-size: 0.9em;
 }
 
 span {
     color: #666;
-    font-size: 0.9em;
 }
 
 #licence {
     margin-top: 20px;
     color: #888;
-    font-size: 0.9em;
 }
 
 #footer {
