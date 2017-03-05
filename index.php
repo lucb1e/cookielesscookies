@@ -75,15 +75,11 @@ if (isset($_POST["new_string"])) {
 <html>
 <head>
     <title>Lucb1e.com :: Cookieless Cookies</title>
-    <style>
-        body {
-            font-family: Arial, serif;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="index.css">
 </head>
 <body>
-<div style="width: 632px; font-size: 1em; margin: 40px auto 0;">
-    <div style="float: right; margin-left: 15px;">
+<div id="contents">
+    <div id="tracker">
         <img src="tracker.jpg"/>
     </div>
     <h2>Cookieless cookies</h2>
@@ -121,7 +117,7 @@ if (isset($_POST["new_string"])) {
         <b>Last visit:</b> <?php echo date("r", $session["last_visit"]); ?><br/>
         <br/>
         <b>Want to store some text here?</b><br/>
-        <textarea id="new_string" name=new_string style="width: 632px;" rows=4 title="new_string">
+        <textarea id="new_string" name=new_string rows=4 title="new_string">
             <?php echo $session["your_string"]; ?>
         </textarea><br/>
         (max. 350 characters)<br/>
@@ -174,7 +170,7 @@ if (isset($_POST["new_string"])) {
     <br/>
     <b>Source code</b><br/>
     What's a project without source code?
-    <span style="color: #666; font-size: 0.9em;">Oh right, Microsoft Windows.</span><br/>
+    <span>Oh right, Microsoft Windows.</span><br/>
     <br/>
     <a href="https://github.com/lucb1e/cookielesscookies"
        target="_blank">https://github.com/lucb1e/cookielesscookies</a><br/>
@@ -212,13 +208,13 @@ if (isset($_POST["new_string"])) {
     while still limiting the tracking capabilities.<br/>
     <br/>
 
-    <div style="margin-top: 20px; color: #888; font-size: 0.9em;">
+    <div id="licence">
         Written by lucb1e in 2013.<br/>
         All text, resources and methods on this page are hereby released as WTFPL -
         <a rel='license' href='http://www.wtfpl.net'>www.wtfpl.net</a>
     </div>
 </div>
 <!-- I often scroll past the end of the document, it's nicer to read I think -->
-<div style="height: 500px;">&nbsp;</div>
+<div id="footer">&nbsp;</div>
 </body>
 </html>
