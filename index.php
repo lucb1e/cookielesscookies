@@ -5,12 +5,12 @@ if (isset($_GET["source"])) {
 
 require("config.php"); // for $secret.
 
-$sessions_dir = "sessions/";
+$sessions_dir = "sessions";
 
 // An ETag was sent to the web server
 if (!empty($_SERVER["HTTP_IF_NONE_MATCH"])) {
     // This is what you would normally do
-    $etag = substr(str_replace(".", "", str_replace("/", "", str_replace("\\", "", $_SERVER["HTTP_IF_NONE_MATCH"]))), 0, 18);
+    $etag = substr(str_replace(".", "", str_replace(DIRECTORY_SEPARATOR, "", str_replace("\\", "", $_SERVER["HTTP_IF_NONE_MATCH"]))), 0, 18);
 } else { // No etag was sent. We need to generate one. Normally you would derive this from randomness.
     $etag = substr(sha1($secret . sha1($_SERVER["REMOTE_ADDR"]) . sha1($_SERVER["HTTP_USER_AGENT"])), 0, 18);
 }
@@ -19,8 +19,8 @@ if (!empty($_SERVER["HTTP_IF_NONE_MATCH"])) {
 function init_session($etag, $force_reinit = false)
 {
     global $session, $sessions_dir;
-    if (!$force_reinit && file_exists($sessions_dir . $etag)) {
-        $session = unserialize(file_get_contents($sessions_dir . $etag));
+    if (!$force_reinit && file_exists($sessions_dir . DIRECTORY_SEPARATOR . $etag)) {
+        $session = unserialize(file_get_contents($sessions_dir . DIRECTORY_SEPARATOR . $etag));
     } else {
         $session = array("visits" => 1, "last_visit" => time(), "your_string" => "");
     }
@@ -37,7 +37,7 @@ function update_session()
 function store_session($etag)
 {
     global $session, $sessions_dir;
-    $fid = fopen($sessions_dir . $etag, "w");
+    $fid = fopen($sessions_dir . DIRECTORY_SEPARATOR . $etag, "w");
     fwrite($fid, serialize($session));
     fclose($fid);
 }
@@ -48,7 +48,7 @@ init_session($etag);
 if (isset($_GET["tracker"])) {
     // No ETag sent? Make sure we use a new session.
     if (empty($_SERVER["HTTP_IF_NONE_MATCH"])) {
-        @unlink($sessions_dir . $etag); // may or may not exist
+        @unlink($sessions_dir . DIRECTORY_SEPARATOR . $etag); // may or may not exist
         unset($session);
         init_session($etag);
     }
@@ -67,7 +67,7 @@ if (isset($_GET["tracker"])) {
 if (isset($_POST["new_string"])) {
     $session["your_string"] = substr(htmlentities($_POST["new_string"]), 0, 500);
     store_session($etag);
-    header("Location: ./");
+    header("Location: .");
     exit;
 }
 ?>
@@ -115,7 +115,7 @@ if (isset($_POST["new_string"])) {
     As you read this, you have already been tagged. Sorry. The good news is that I don't link your session id to any
     personally identifiable information. Here is everything I store about you right now:<br/>
     <br/>
-    <form method="POST" action="./">
+    <form method="POST" action=".">
         <b>Number of visits:</b> <?php echo $session["visits"]; ?><br/>
         <br/>
         <b>Last visit:</b> <?php echo date("r", $session["last_visit"]); ?><br/>
