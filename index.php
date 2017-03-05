@@ -3,9 +3,7 @@ if (isset($_GET["source"])) {
     die("See <a href='https://github.com/lucb1e/cookielesscookies'>github.com/lucb1e/cookielesscookies</a>");
 }
 
-require("config.php"); // for $secret.
-
-$sessions_dir = "sessions";
+require("config.php");
 
 // An ETag was sent to the web server
 if (!empty($_SERVER["HTTP_IF_NONE_MATCH"])) {
@@ -41,13 +39,13 @@ if (isset($_GET["tracker"]) || isset($_POST["new_string"])) {
         header("Cache-Control: private, must-revalidate, proxy-revalidate");
         header("ETag: " . $etag); // our "cookie"
         header("Content-type: image/jpeg");
-        header("Content-length: " . filesize("fingerprinting.jpg"));
-        readfile("fingerprinting.jpg");
+        header("Content-length: " . filesize($fingerprint_filename));
+        readfile($fingerprint_filename);
     } else {
         // Vulnerable to CSRF attacks, I know. I didn't think it really mattered
         // since XSS is impossible and no important data is stored.
         header("Location: .");
-        $session["your_string"] = substr(htmlentities($_POST["new_string"]), 0, 500);
+        $session["your_string"] = substr(htmlentities($_POST["new_string"]), 0, $string_max_len);
     }
 
     // Write any changes to the disk
@@ -109,7 +107,7 @@ if (isset($_GET["tracker"]) || isset($_POST["new_string"])) {
         <textarea name=new_string style="width: 632px;" rows=4 title="new_string">
             <?php echo $session["your_string"]; ?>
         </textarea><br/>
-        (max. 350 characters)<br/>
+        (max. <?php echo $string_max_len; ?> characters)<br/>
         <input type=submit value=Store/>
     </form>
     <br/>
