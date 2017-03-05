@@ -5,9 +5,9 @@ if (isset($_GET["source"])) {
 
 require("config.php"); // for $secret.
 
-$sessionsdir = "sessions/";
+$sessions_dir = "sessions/";
 
-// An ETag was sent to the webserver
+// An ETag was sent to the web server
 if (!empty($_SERVER["HTTP_IF_NONE_MATCH"])) {
     // This is what you would normally do
     $etag = substr(str_replace(".", "", str_replace("/", "", str_replace("\\", "", $_SERVER["HTTP_IF_NONE_MATCH"]))), 0, 18);
@@ -16,17 +16,17 @@ if (!empty($_SERVER["HTTP_IF_NONE_MATCH"])) {
 }
 
 // Initialize a new or existing session given any etag.
-function initsession($etag, $force_reinit = false)
+function init_session($etag, $force_reinit = false)
 {
-    global $session, $sessionsdir;
-    if (!$force_reinit && file_exists($sessionsdir . $etag)) {
-        $session = unserialize(file_get_contents($sessionsdir . $etag));
+    global $session, $sessions_dir;
+    if (!$force_reinit && file_exists($sessions_dir . $etag)) {
+        $session = unserialize(file_get_contents($sessions_dir . $etag));
     } else {
         $session = array("visits" => 1, "last_visit" => time(), "your_string" => "");
     }
 }
 
-function updatesession()
+function update_session()
 {
     global $session;
     $session["visits"] += 1;
@@ -34,26 +34,26 @@ function updatesession()
 }
 
 // Write any changes to the disk
-function storesession($etag)
+function store_session($etag)
 {
-    global $session, $sessionsdir;
-    $fid = fopen($sessionsdir . $etag, "w");
+    global $session, $sessions_dir;
+    $fid = fopen($sessions_dir . $etag, "w");
     fwrite($fid, serialize($session));
     fclose($fid);
 }
 
-initsession($etag);
+init_session($etag);
 
 // .htaccess rewrites to ?tracker if the 'tracker.jpg' file is requested.
 if (isset($_GET["tracker"])) {
     // No ETag sent? Make sure we use a new session.
     if (empty($_SERVER["HTTP_IF_NONE_MATCH"])) {
-        @unlink($sessionsdir . $etag); // may or may not exist
+        @unlink($sessions_dir . $etag); // may or may not exist
         unset($session);
-        initsession($etag);
+        init_session($etag);
     }
-    updatesession();
-    storesession($etag);
+    update_session();
+    store_session($etag);
     header("Cache-Control: private, must-revalidate, proxy-revalidate");
     header("ETag: " . substr($etag, 0, 18)); // our "cookie"
     header("Content-type: image/jpeg");
@@ -64,9 +64,9 @@ if (isset($_GET["tracker"])) {
 
 // Vulnerable to CSRF attacks, I know. I didn't think it really mattered
 // since XSS is impossible and no important data is stored.
-if (isset($_POST["newstring"])) {
-    $session["your_string"] = substr(htmlentities($_POST["newstring"]), 0, 500);
-    storesession($etag);
+if (isset($_POST["new_string"])) {
+    $session["your_string"] = substr(htmlentities($_POST["new_string"]), 0, 500);
+    store_session($etag);
     header("Location: ./");
     exit;
 }
@@ -121,7 +121,7 @@ if (isset($_POST["newstring"])) {
         <b>Last visit:</b> <?php echo date("r", $session["last_visit"]); ?><br/>
         <br/>
         <b>Want to store some text here?</b><br/>
-        <textarea name=newstring style="width: 632px;" rows=4 title="newstring">
+        <textarea name=new_string style="width: 632px;" rows=4 title="new_string">
             <?php echo $session["your_string"]; ?>
         </textarea><br/>
         (max. 350 characters)<br/>
@@ -130,7 +130,7 @@ if (isset($_POST["newstring"])) {
     <br/>
     Go ahead, type something and store it. Then close your browser and open this page again. Is it still there?<br/>
     <br/>
-    Check your cookies, is anything there? Nope, it's all in a fake image checksum that almost noone is aware of.
+    Check your cookies, is anything there? Nope, it's all in a fake image checksum that almost no one is aware of.
     Saw that eye on the right top of the page? That's our tracker.<br/>
     <br/>
     <hr/>
@@ -142,7 +142,7 @@ if (isset($_POST["newstring"])) {
     <img src="etags.jpg"/><br/>
     <br/>
     The ETag shown in the image is a sort of checksum. When the image changes, the checksum changes. So when the browser
-    has the image and knows the checksum, it can send it to the webserver for verification. The webserver then checks
+    has the image and knows the checksum, it can send it to the web server for verification. The web server then checks
     whether the image has changed.
     If it hasn't, the image does not need to be retransmitted and lots of data is saved.<br/>
     <br/>
@@ -161,7 +161,7 @@ if (isset($_POST["newstring"])) {
     which I wanted to avoid to show that it can be done without.<br/>
     <br/>
     This chicken and egg problem introduces a few bugs:<br/>
-    - All information you see was from your previous pageload. Press F5 to see updated data.<br/>
+    - All information you see was from your previous page load. Press F5 to see updated data.<br/>
     - When you visit a page where you don't have an ETag (like incognito mode), your session will be emptied.
     Again, this is only visible when you reload the page.<br/>
     <br/>
@@ -181,13 +181,13 @@ if (isset($_POST["newstring"])) {
     <br/>
     <hr/>
 
-    <a name="whatdowedo"></a>
+    <a name="what_do_we_do"></a>
     <h3>What can we do to stop it?</h3>
     One thing I would strongly recommend you to do anytime you visit a page where you want a little more
-    security, is opening a private navigation window and using https exclusively. Doing this single-handedly
+    security, is opening a private navigation window and using https exclusively. Doing this single-handily
     eliminates attacks like BREACH (the latest https hack), disables any and all tracking cookies that you
     might have, and also eliminates cache tracking issues like I'm demonstrating on this page. I use this
-    private navigation mode when I do online banking. In Firefox (and I think MSIE too) it's Ctrl+Shift+P,
+    private navigation mode when I do online banking. In Firefox (and I think MS IE too) it's Ctrl+Shift+P,
     in Chrome it's Ctrl+Shift+N.<br/>
     <br/>
     Besides that, it depends on your level of paranoia.<br/>
