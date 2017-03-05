@@ -77,12 +77,12 @@ if (isset($_POST["newstring"])) {
     <title>Lucb1e.com :: Cookieless Cookies</title>
     <style>
         body {
-            font-family: Arial;
+            font-family: Arial, serif;
         }
     </style>
 </head>
 <body>
-<div style="width: 632px; font-size: 1em; margin: 0 auto 0 auto; margin-top: 40px;">
+<div style="width: 632px; font-size: 1em; margin: 40px auto 0;">
     <div style="float: right; margin-left: 15px;">
         <img src="tracker.jpg"/>
     </div>
