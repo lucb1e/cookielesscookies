@@ -79,9 +79,7 @@ if (isset($_POST["new_string"])) {
 </head>
 <body>
 <div id="contents">
-    <div id="tracker">
-        <img src="tracker.jpg"/>
-    </div>
+    <img id="tracker" src="tracker.jpg"/>
     <h2>Cookieless cookies</h2>
 
     There is another obscure way of tracking users without using cookies or even Javascript. It has already being
