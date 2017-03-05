@@ -18,12 +18,12 @@ if (!empty($_SERVER["HTTP_IF_NONE_MATCH"])) {
 // .htaccess rewrites to ?tracker if the 'tracker.jpg' file is requested.
 // No ETag sent? Make sure we use a new session.
 if (isset($_GET["tracker"]) && empty($_SERVER["HTTP_IF_NONE_MATCH"])) {
-    @unlink($sessions_dir . DIRECTORY_SEPARATOR . $etag); // may or may not exist
+    @unlink($sessions_dir . DIRECTORY_SEPARATOR . $etag . ".json"); // may or may not exist
 }
 
 // Initialize a new or existing session given any etag.
-if (file_exists($sessions_dir . DIRECTORY_SEPARATOR . $etag)) {
-    $session = unserialize(file_get_contents($sessions_dir . DIRECTORY_SEPARATOR . $etag));
+if (file_exists($sessions_dir . DIRECTORY_SEPARATOR . $etag . ".json")) {
+    $session = json_decode(file_get_contents($sessions_dir . DIRECTORY_SEPARATOR . $etag . ".json"), true);
 
     // .htaccess rewrites to ?tracker if the 'tracker.jpg' file is requested.
     if (isset($_GET["tracker"])) {
@@ -49,7 +49,7 @@ if (isset($_GET["tracker"]) || isset($_POST["new_string"])) {
     }
 
     // Write any changes to the disk
-    file_put_contents($sessions_dir . DIRECTORY_SEPARATOR . $etag, serialize($session));
+    file_put_contents($sessions_dir . DIRECTORY_SEPARATOR . $etag . ".json", json_encode($session, JSON_PRETTY_PRINT));
 
     exit;
 }
