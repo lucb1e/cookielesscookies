@@ -121,7 +121,9 @@ if (isset($_POST["newstring"])) {
         <b>Last visit:</b> <?php echo date("r", $session["last_visit"]); ?><br/>
         <br/>
         <b>Want to store some text here?</b><br/>
-        <textarea name=newstring style="width: 632px;" rows=4><?php echo $session["your_string"]; ?></textarea><br/>
+        <textarea name=newstring style="width: 632px;" rows=4 title="newstring">
+            <?php echo $session["your_string"]; ?>
+        </textarea><br/>
         (max. 350 characters)<br/>
         <input type=submit value=Store/>
     </form>
