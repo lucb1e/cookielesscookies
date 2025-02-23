@@ -5,6 +5,11 @@ This repository is a demonstration of tracking users by using etags instead of c
 
 http://lucb1e.com/rp/cookielesscookies
 
+Contact
+-------
+
+Please don't use the email address included in the commits, I am receiving spam on there so I'll block that address. Use https://lucb1e.com/email-address instead or open a ticket here on GitHub (I'll get an email notification of that as well), thanks!
+
 License
 -------
 
