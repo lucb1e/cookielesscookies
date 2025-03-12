@@ -1,0 +1,39 @@
+13,15d12
+< 		if (!ctype_xdigit($etag)) {
+< 			die("");
+< 		}
+18c15
+< 		$etag = substr(sha1($secret . rand()), 0, 18);
+---
+> 		$etag = substr(sha1($secret . sha1($_SERVER["REMOTE_ADDR"]) . sha1($_SERVER["HTTP_USER_AGENT"])), 0, 18);
+60,85c57,59
+< 		header("Content-type: image/png");
+< 
+< 		$im = imagecreatetruecolor(400, 60);
+< 
+< 		// Create some colors
+< 		$white = imagecolorallocate($im, 255, 255, 255);
+< 		$grey = imagecolorallocate($im, 128, 128, 128);
+< 		$black = imagecolorallocate($im, 0, 0, 0);
+< 		imagefilledrectangle($im, 0, 0, 399, 59, $white);
+< 
+< 		// The text to draw
+< 		$text = 'visitor id: ' . $etag;
+< 		// Replace path by your own font path
+< 		$font = './font.ttf';
+< 
+< 		// Add some shadow to the text
+< 		//imagettftext($im, 15, 0, 11, 21, $grey, $font, $text);
+< 		// Add the text
+< 		imagettftext($im, 15, 0, 10, 20, $black, $font, $text);
+< 		$text = "number visits: " . $session["visits"];
+< 		imagettftext($im, 15, 0, 10, 50, $black, $font, $text);
+< 
+< 		// Using imagepng() results in clearer text compared with imagejpeg()
+< 		imagepng($im);
+< 		imagedestroy($im);
+< 
+---
+> 		header("Content-type: image/jpeg");
+> 		header("Content-length: " . filesize("fingerprinting.jpg"));
+> 		readfile("fingerprinting.jpg");

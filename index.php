@@ -87,8 +87,9 @@
 			</div>
 			<h2>Cookieless cookies</h2>
 			
-			There is another obscure way of tracking users without using cookies or even Javascript. It has already being
-			used by numerous websites but few people know of it. This page explains how it works and how to protect yourself.<br/>
+			There is another obscure way of tracking users without using cookies or even Javascript. It has
+			<a href="http://en.wikipedia.org/wiki/HTTP_ETag#Tracking_using_ETags" target="_blank">already been used</a>
+			by numerous websites but few people know of it. This page explains how it works and how to protect yourself.<br/>
 			<br/>
 			<br/>
 			This tracking method works <b>without</b> needing to use:<br/>
@@ -98,10 +99,10 @@
 				<li>LocalStorage/SessionStorage/GlobalStorage</li>
 				<li>Flash, Java or other plugins</li>
 				<li>Your IP address or user agent string</li>
-				<li>Any methods employed by <a href="https://panopticlick.eff.org" target="_blank">Panopticlick</a></li>
+				<li>Any methods employed by <a href="https://panopticlick.eff.org" target="_blank">Panopticlick</a> (at the time of writing, 2013)</li>
 			</ul>
 
-			Instead it uses another type of storage that is persistent between browser restarts: <b>caching</b>.<br/>
+			Instead, it uses another type of storage that is persistent between browser restarts: <b>caching</b>.<br/>
 			<br/>
 			Even when you disabled cookies entirely, have Javascript turned off and use a VPN service, this technique will
 			still be able to track you.<br/>
@@ -110,8 +111,10 @@
 			
 			<a name="demo"></a>
 			<h3>Demonstration</h3>
-			As you read this, you have already been tagged. Sorry. The good news is that I don't link your session id to any
-			personally identifiable information. Here is everything I store about you right now:<br/>
+			<i>Update (2025): Someone else made a better version here: <a href='https://potatocrunchcereal.com/cookielesscookies/' target='_blank' rel=noopener>potatocrunchcereal.com/cookielesscookies/</a></i><br/>
+			<br/>
+			As you read this, you have already been tagged. Sorry. The good news is that I don't link your session identifier to any
+			personal information. Here is everything I store about you right now:<br/>
 			<br/>
 			<form method="POST" action="./">
 				<b>Number of visits:</b> <?php echo $session["visits"]; ?><br/>
@@ -147,6 +150,8 @@
 			<br/>
 			<a name="#demotech"></a>
 			<b>Technical stuff (and bugs) specifically about this demo</b><br/>
+			<i>Update (2025): Note that the better version linked <a href='#demo'>above</a> should not have these problems.</i><br/>
+			<br/>
 			To demonstrate how this works without having to use Javascript, I had to find a piece of information that's relatively
 			unique to you besides this ETag. The image is loaded <i>after</i> the page is loaded, but only the image contains the
 			ETag. How can I display up to date info on the page? Turns out I can't really do that without dynamically updating the
@@ -200,8 +205,27 @@
 			This would be another good alternative for 99% of the users because it has a relatively low performance impact
 			while still limiting the tracking capabilities.<br/>
 			<br/>
-			
-			<div style="margin-top: 20px; color: #888; font-size: 0.9em;">
+			<b>Update (2013):</b> I've heard the Firefox add-on SecretAgent also does ETag overwriting to prevent this kind of tracking
+			method. You can whitelist websites to re-enable caching there while blocking tracking by other domains. It has been
+			<a href="https://nodpi.org/forum/index.php/topic,4418.msg51737.html#msg51737" target="_blank">confirmed</a> that this
+			add-on stops the tracking. <a href="https://www.dephormation.org.uk/index.php?page=81" target="_blank">SecretAgent's website</a>.<br/>
+			<br/>
+			<br/>
+			<b>Update (2020):</b> A reader made a tool similar to EFF's Panopticon. It tries to check a few more things, and while it
+			bugged out for me in Firefox, it's another interesting approach that might give you more insight if it works for you.<br/>
+			<a href="https://privacy.net/analyzer/" target="_blank" rel=noreferrer>https://privacy.net/analyzer/</a><br/>
+			<br/>
+			<br/>
+			<b>Update (2025):</b> Another reader made an improved version, I added the link in the text <a href='#demo'>above</a>.
+			Their page does not have a source code link, but a diff was shared with me under the same license: <a href='etag.diff'>etag.diff</a>.
+			Thanks!
+			<hr/>
+			<br/>
+			Liked this? Follow me on <s><a href="https://twitter.com/lucb1edotcom">Twitter</a> or <a href="http://gplus.to/lucb1edotcom">Google Plus</a>!</s>
+			So as of, ehm, a while, I'm not on Twitter anymore and RIP G+. To get in touch, use <a href='https://lucb1e.com/email-address'>lucb1e.com/email-address</a>.
+			I'm on Mastodon but under a different name, feel free to ask it by email
+
+			<div style="margin-top: 40px; color: #888; font-size: 0.9em;">
 				Written by lucb1e in 2013.<br/>
 				All text, resources and methods on this page are hereby released as WTFPL - <a rel='license' href='http://www.wtfpl.net'>www.wtfpl.net</a>
 			</div>
